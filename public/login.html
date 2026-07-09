@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - CourseMate Chat</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <h1>Welcome Back</h1>
+      <p>Login to continue chatting with your course mates.</p>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="emailOrUsername">Email or Username</label>
+          <input
+            type="text"
+            id="emailOrUsername"
+            placeholder="Enter email or username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter password"
+            />
+            <button type="button" id="toggleLoginPassword" class="toggle-password">
+              👁
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-btn">Login</button>
+        <p id="messageBox" class="message-box"></p>
+      </form>
+
+      <p class="switch-link">
+        Don’t have an account?
+        <a href="register.html">Register here</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>

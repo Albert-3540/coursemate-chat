@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Dashboard - CourseMate Chat</title>
+  <link rel="stylesheet" href="chat.css" />
+</head>
+<body>
+  <div class="chat-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">CourseMate Chat</div>
+
+      <div class="user-profile">
+        <img id="profilePic" src="https://i.pravatar.cc/100?img=12" alt="Profile" />
+        <div>
+          <h3 id="profileName">Student Name</h3>
+          <p id="profileUsername">@username</p>
+        </div>
+      </div>
+
+      <div class="menu">
+        <button class="menu-btn active">General Chat</button>
+      </div>
+
+      <div class="online-section">
+        <h4>Registered Users</h4>
+        <ul id="onlineUsersList"></ul>
+      </div>
+
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </aside>
+
+    <!-- Main Chat -->
+    <main class="chat-main">
+      <div class="chat-header">
+        <div>
+          <h2>General Class Room</h2>
+          <p>Chat with everyone in your course</p>
+        </div>
+      </div>
+
+      <div id="chatMessages" class="chat-messages"></div>
+
+      <form id="chatForm" class="chat-input-area">
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Type your message..."
+          autocomplete="off"
+        />
+        <button type="submit">Send</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --background: #f7f9fd;
+  --surface: #ffffff;
+  --text-main: #0f172a;
+  --text-soft: #475569;
+  --border: #e2e8f0;
+  --radius: 22px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--background);
+  color: var(--text-main);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.container {
+  width: min(1180px, 92%);
+  margin: 0 auto;
+}
+
+.music-hero {
+  padding: 42px 0 40px;
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 55%, #93c5fd 100%);
+  color: #fff;
+}
+
+.music-hero-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.music-hero h1 {
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  margin-bottom: 10px;
+}
+
+.music-hero p {
+  max-width: 620px;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.8;
+}
+
+.player-page {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr;
+  gap: 28px;
+  margin: 32px auto 64px;
+}
+
+.player-card,
+.playlist-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
+  padding: 28px;
+}
+
+.player-info {
+  margin-bottom: 28px;
+}
+
+.track-label {
+  display: inline-flex;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+}
+
+.track-title {
+  margin: 18px 0 10px;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.track-subtitle {
+  color: var(--text-soft);
+  max-width: 620px;
+  line-height: 1.7;
+}
+
+.playback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 22px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-main);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.media-preview {
+  border-radius: 22px;
+  overflow: hidden;
+  background: #f8fafc;
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+}
+
+audio,
+video {
+  width: 100%;
+  max-width: 100%;
+  outline: none;
+}
+
+.playlist-section h3 {
+  font-size: 1.35rem;
+  margin-bottom: 18px;
+}
+
+.playlist {
+  display: grid;
+  gap: 16px;
+}
+
+.track-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 18px;
+  border-radius: 20px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.track-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.25);
+  box-shadow: 0 18px 34px rgba(37, 99, 235, 0.08);
+}
+
+.track-card.active {
+  border-color: var(--primary);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.track-number {
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  color: var(--primary);
+  font-weight: 800;
+  border: 1px solid var(--border);
+}
+
+.track-details {
+  display: grid;
+  gap: 4px;
+}
+
+.track-name {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.track-artist {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
+.track-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 0.83rem;
+}
+
+@media (max-width: 900px) {
+  .player-page {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .music-hero-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .player-card,
+  .playlist-section {
+    padding: 22px;
+  }
+}

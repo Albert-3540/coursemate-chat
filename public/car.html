@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxury Motors - Premium Car Showroom</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff6b35;
+            border-radius: 10px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 14px 32px;
+            background: transparent;
+            color: #fff;
+            border: 2px solid #ff6b35;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: #ff6b35;
+            transform: translateY(-3px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo i {
+            color: #ff6b35;
+            font-size: 30px;
+        }
+        .logo span span {
+            color: #ff6b35;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+            align-items: center;
+        }
+        .nav-links a {
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ff6b35;
+            transition: width 0.3s;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .nav-links a:hover {
+            color: #ff6b35;
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -12px;
+            background: #ff6b35;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .auth-btn {
+            padding: 8px 20px;
+            background: #ff6b35;
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .auth-btn:hover {
+            background: #e55a2b;
+            transform: scale(1.05);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ff6b35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 100px 20px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 40px;
+        }
+
+        .hero-content h1 {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+        .hero-content h1 span {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-content p {
+            font-size: 20px;
+            color: #aaa;
+            margin: 24px 0 32px;
+            max-width: 500px;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 550px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.3);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-header h2 {
+            font-size: 44px;
+            font-weight: 700;
+        }
+        .section-header h2 span {
+            color: #ff6b35;
+        }
+        .section-header p {
+            color: #aaa;
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        /* ===== SEARCH & FILTER ===== */
+        .search-filter {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .search-filter input,
+        .search-filter select {
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            background: #141414;
+            color: #fff;
+            font-size: 16px;
+            min-width: 200px;
+            transition: border 0.3s;
+        }
+        .search-filter input:focus,
+        .search-filter select:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+        .search-filter select option {
+            background: #141414;
+        }
+
+        /* ===== CARS GRID ===== */
+        .cars-section {
+            padding: 80px 20px;
+        }
+
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .car-card {
+            background: #1a1a1a;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+        .car-card:hover {
+            transform: translateY(-10px);
+            border-color: #ff6b35;
+            box-shadow: 0 20px 50px rgba(255, 107, 53, 0.2);
+        }
+
+        .car-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .car-card .badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: #ff6b35;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .car-info {
+            padding: 24px;
+        }
+        .car-info h3 {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .car-info .price {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin: 6px 0 12px;
+        }
+        .car-info .specs {
+            display: flex;
+            gap: 16px;
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .car-info .specs i {
+            margin-right: 4px;
+            color: #ff6b35;
+        }
+        .car-info .btn-primary {
+            width: 100%;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .car-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .car-actions .btn-primary {
+            flex: 1;
+        }
+        .wishlist-btn {
+            background: transparent;
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            padding: 12px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+        }
+        .wishlist-btn:hover {
+            background: #ff6b35;
+            color: #fff;
+        }
+        .wishlist-btn.active {
+            background: #ff6b35;
+            color: #fff;
+        }
+
+        /* ===== ABOUT ===== */
+        .about-section {
+            padding: 80px 20px;
+            background: linear-gradient(180deg, #0a0a0a, #141414);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 44px;
+            font-weight: 700;
+        }
+        .about-text h2 span {
+            color: #ff6b35;
+        }
+        .about-text p {
+            color: #aaa;
+            font-size: 18px;
+            margin: 16px 0 32px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .feature {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .feature i {
+            font-size: 28px;
+            color: #ff6b35;
+            margin-top: 4px;
+        }
+        .feature h4 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .feature p {
+            font-size: 14px;
+            color: #888;
+            margin: 0;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.2);
+        }
+
+        /* ===== CONTACT ===== */
+        .contact-section {
+            padding: 80px 20px;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            background: #141414;
+            color: #fff;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+        .contact-form textarea {
+            resize: vertical;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            justify-content: center;
+        }
+        .contact-info div {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .contact-info i {
+            font-size: 28px;
+            color: #ff6b35;
+            width: 48px;
+            height: 48px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .contact-info p {
+            font-size: 18px;
+        }
+
+        /* ===== CART SIDEBAR ===== */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 999;
+            display: none;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            height: 100%;
+            background: #141414;
+            z-index: 1000;
+            padding: 32px 24px;
+            transition: right 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #333;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #333;
+        }
+        .cart-header h3 {
+            font-size: 22px;
+        }
+        .cart-header .close-cart {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 0;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid #222;
+            align-items: center;
+        }
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .cart-item .item-info {
+            flex: 1;
+        }
+        .cart-item .item-info h4 {
+            font-size: 15px;
+        }
+        .cart-item .item-info .item-price {
+            color: #ff6b35;
+            font-weight: 600;
+        }
+        .cart-item .item-remove {
+            background: none;
+            border: none;
+            color: #ff4444;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .cart-item .qty-control {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 4px;
+        }
+        .cart-item .qty-control button {
+            background: #333;
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .cart-item .qty-control button:hover {
+            background: #ff6b35;
+        }
+
+        .empty-cart-msg {
+            text-align: center;
+            color: #666;
+            padding: 40px 0;
+        }
+
+        .cart-footer {
+            border-top: 1px solid #333;
+            padding-top: 16px;
+        }
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .cart-total span:last-child {
+            color: #ff6b35;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+        }
+
+        /* ===== AUTH MODAL ===== */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-modal.active {
+            display: flex;
+        }
+        .auth-modal-content {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 420px;
+            width: 90%;
+            border: 1px solid #333;
+        }
+        .auth-modal-content h2 {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .auth-modal-content h2 span {
+            color: #ff6b35;
+        }
+        .auth-modal-content input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            background: #0a0a0a;
+            color: #fff;
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+        .auth-modal-content input:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+        .auth-modal-content .btn-primary {
+            width: 100%;
+        }
+        .auth-modal-content .auth-switch {
+            text-align: center;
+            margin-top: 16px;
+            color: #aaa;
+        }
+        .auth-modal-content .auth-switch a {
+            color: #ff6b35;
+            cursor: pointer;
+        }
+        .auth-modal-content .auth-switch a:hover {
+            text-decoration: underline;
+        }
+        .close-modal {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.3s;
+        }
+        .close-modal:hover {
+            color: #fff;
+        }
+
+        /* ===== ORDER HISTORY ===== */
+        .orders-section {
+            padding: 80px 20px;
+            background: #0f0f0f;
+        }
+        .orders-grid {
+            display: grid;
+            gap: 20px;
+        }
+        .order-card {
+            background: #1a1a1a;
+            padding: 24px;
+            border-radius: 16px;
+            border-left: 4px solid #ff6b35;
+        }
+        .order-card .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .order-card .order-id {
+            color: #ff6b35;
+            font-weight: 600;
+        }
+        .order-card .order-status {
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .order-status.delivered {
+            background: #28a745;
+            color: #fff;
+        }
+        .order-status.processing {
+            background: #ffc107;
+            color: #000;
+        }
+        .order-status.shipped {
+            background: #17a2b8;
+            color: #fff;
+        }
+        .order-card .order-items {
+            color: #aaa;
+            margin: 8px 0;
+        }
+        .order-card .order-total {
+            font-weight: 700;
+            color: #ff6b35;
+            font-size: 18px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 16px 28px;
+            border-radius: 12px;
+            border-left: 4px solid #ff6b35;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transform: translateX(120%);
+            transition: transform 0.5s ease;
+            z-index: 2000;
+            font-weight: 500;
+            max-width: 400px;
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+        .toast.success {
+            border-left-color: #28a745;
+        }
+        .toast.error {
+            border-left-color: #dc3545;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            border-top: 1px solid #1a1a1a;
+            padding: 32px 20px;
+            text-align: center;
+        }
+        .footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer p {
+            color: #666;
+        }
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .social-links a:hover {
+            background: #ff6b35;
+            transform: translateY(-3px);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 120px;
+            }
+            .hero-content p {
+                margin: 16px auto;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+            .about-image {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: #0a0a0a;
+                padding: 20px;
+                gap: 16px;
+                border-bottom: 1px solid #222;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .hamburger {
+                display: block;
+            }
+            .hero-content h1 {
+                font-size: 40px;
+            }
+            .section-header h2 {
+                font-size: 32px;
+            }
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+            .footer .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .search-filter input,
+            .search-filter select {
+                min-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-car"></i>
+                <span>Luxury<span>Motors</span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#cars">Cars</a></li>
+                <li><a href="#orders">Orders</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li>
+                    <button class="auth-btn" id="authBtn" onclick="openAuth()">
+                        <i class="fas fa-user"></i> Login
+                    </button>
+                </li>
+                <li>
+                    <div class="user-avatar" id="userAvatar" style="display:none;" onclick="logout()">
+                        <span id="avatarText">U</span>
+                    </div>
+                </li>
+            </ul>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Drive Your <span>Dream</span></h1>
+            <p>Experience luxury, performance, and elegance in every mile.</p>
+            <div class="hero-buttons">
+                <a href="#cars" class="btn-primary"><i class="fas fa-arrow-right"></i> Explore Cars</a>
+                <a href="#contact" class="btn-secondary"><i class="fas fa-phone"></i> Contact Us</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600" alt="Luxury Car" />
+        </div>
+    </section>
+
+    <!-- ===== CARS SECTION ===== -->
+    <section id="cars" class="cars-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our <span>Collection</span></h2>
+                <p>Choose your perfect ride from our premium selection</p>
+            </div>
+            
+            <!-- Search & Filter -->
+            <div class="search-filter">
+                <input type="text" id="searchInput" placeholder="🔍 Search cars..." onkeyup="filterCars()" />
+                <select id="filterSelect" onchange="filterCars()">
+                    <option value="all">All Cars</option>
+                    <option value="new">New</option>
+                    <option value="featured">Featured</option>
+                    <option value="limited">Limited</option>
+                    <option value="sale">Sale</option>
+                    <option value="premium">Premium</option>
+                </select>
+                <select id="sortSelect" onchange="filterCars()">
+                    <option value="default">Sort by: Default</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name">Name: A to Z</option>
+                </select>
+            </div>
+
+            <div class="cars-grid" id="carsGrid">
+                <!-- Cars will be injected by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ORDER HISTORY ===== -->
+    <section id="orders" class="orders-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Your <span>Orders</span></h2>
+                <p>Track your order history</p>
+            </div>
+            <div class="orders-grid" id="ordersGrid">
+                <p style="text-align:center;color:#666;padding:40px 0;">No orders yet. Start shopping!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT SECTION ===== -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Why Choose <span>Us?</span></h2>
+                    <p>With over 20 years of excellence, Luxury Motors brings you the finest automobiles from around the world.</p>
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h4>Certified Quality</h4>
+                                <p>Every car undergoes rigorous inspection</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-headset"></i>
+                            <div>
+                                <h4>24/7 Support</h4>
+                                <p>Our team is always here to help</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-tag"></i>
+                            <div>
+                                <h4>Best Prices</h4>
+                                <p>Competitive pricing with zero hidden fees</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-truck"></i>
+                            <div>
+                                <h4>Free Delivery</h4>
+                                <p>Complimentary delivery within 50km</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600" alt="Showroom" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT SECTION ===== -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Get In <span>Touch</span></h2>
+                <p>We'd love to hear from you</p>
+            </div>
+            <div class="contact-content">
+                <form id="contactForm" class="contact-form">
+                    <input type="text" placeholder="Your Name" required />
+                    <input type="email" placeholder="Your Email" required />
+                    <input type="text" placeholder="Subject" required />
+                    <textarea rows="4" placeholder="Message" required></textarea>
+                    <button type="submit" class="btn-primary">Send Message</button>
+                </form>
+                <div class="contact-info">
+                    <div>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>123 Luxury Ave, Beverly Hills, CA 90210</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-phone"></i>
+                        <p>+1 (800) 555-0199</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-envelope"></i>
+                        <p>info@luxurymotors.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CART SIDEBAR ===== -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Your Cart</h3>
+            <button class="close-cart" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart-msg">Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0</span>
+            </div>
+            <button class="btn-primary checkout-btn" onclick="processCheckout()">
+                <i class="fas fa-credit-card"></i> Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== AUTH MODAL ===== -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <span class="close-modal" onclick="closeAuth()">&times;</span>
+            <h2><span id="authTitle">Login</span></h2>
+            <form id="authForm" onsubmit="handleAuth(event)">
+                <input type="text" id="authName" placeholder="Full Name" style="display:none;" />
+                <input type="email" id="authEmail" placeholder="Email Address" required />
+                <input type="password" id="authPassword" placeholder="Password" required />
+                <button type="submit" class="btn-primary" id="authSubmitBtn">Login</button>
+            </form>
+            <div class="auth-switch">
+                <span id="authSwitchText">Don't have an account?</span>
+                <a onclick="switchAuthMode()" id="authSwitchLink">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST NOTIFICATION ===== -->
+    <div id="toast" class="toast"></div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Luxury Motors. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ========================================
+        // DATA
+        // ========================================
+        const cars = [
+            {
+                id: 1,
+                name: "Ferrari SF90 Stradale",
+                price: 524815,
+                year: 2024,
+                mileage: "1,200 mi",
+                engine: "V8 Hybrid",
+                image: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400",
+                badge: "New"
+            },
+            {
+                id: 2,
+                name: "Lamborghini Huracán",
+                price: 329000,
+                year: 2023,
+                mileage: "3,500 mi",
+                engine: "V10",
+                image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400",
+                badge: "Featured"
+            },
+            {
+                id: 3,
+                name: "Porsche 911 Turbo S",
+                price: 223450,
+                year: 2024,
+                mileage: "800 mi",
+                engine: "Flat-6 Twin Turbo",
+                image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400",
+                badge: "Limited"
+            },
+            {
+                id: 4,
+                name: "Mercedes AMG GT 63",
+                price: 164900,
+                year: 2023,
+                mileage: "5,200 mi",
+                engine: "V8 Biturbo",
+                image: "https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=400",
+                badge: "Sale"
+            },
+            {
+                id: 5,
+                name: "Audi R8 V10",
+                price: 189900,
+                year: 2024,
+                mileage: "2,100 mi",
+                engine: "V10",
+                image: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400",
+                badge: "New"
+            },
+            {
+                id: 6,
+                name: "BMW M8 Competition",
+                price: 139500,
+                year: 2023,
+                mileage: "4,800 mi",
+                engine: "V8 Twin Turbo",
+                image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400",
+                badge: "Premium"
+            },
+            {
+                id: 7,
+                name: "Tesla Model S Plaid",
+                price: 89990,
+                year: 2024,
+                mileage: "500 mi",
+                engine: "Electric Tri-Motor",
+                image: "https://images.unsplash.com/photo-1614200179396-2bdb77ebf81b?w=400",
+                badge: "New"
+            },
+            {
+                id: 8,
+                name: "Rolls-Royce Ghost",
+                price: 332500,
+                year: 2024,
+                mileage: "200 mi",
+                engine: "V12 Twin-Turbo",
+                image: "https://images.unsplash.com/photo-1631295868223-63265b40d9e4?w=400",
+                badge: "Premium"
+            }
+        ];
+
+        // ========================================
+        // STATE
+        // ========================================
+        let cart = [];
+        let wishlist = [];
+        let orders = [];
+        let currentUser = null;
+        let isAuthMode = 'login'; // 'login' or 'signup'
+        let filteredCars = [...cars];
+
+        // ========================================
+        // AUTHENTICATION
+        // ========================================
+        function openAuth() {
+            document.getElementById('authModal').classList.add('active');
+        }
+
+        function closeAuth() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+
+        function switchAuthMode() {
+            const title = document.getElementById('authTitle');
+            const btn = document.getElementById('authSubmitBtn');
+            const switchText = document.getElementById('authSwitchText');
+            const switchLink = document.getElementById('authSwitchLink');
+            const nameField = document.getElementById('authName');
+
+            if (isAuthMode === 'login') {
+                isAuthMode = 'signup';
+                title.textContent = 'Sign Up';
+                btn.textContent = 'Sign Up';
+                switchText.textContent = 'Already have an account?';
+                switchLink.textContent = 'Login';
+                nameField.style.display = 'block';
+            } else {
+                isAuthMode = 'login';
+                title.textContent = 'Login';
+                btn.textContent = 'Login';
+                switchText.textContent = "Don't have an account?";
+                switchLink.textContent = 'Sign Up';
+                nameField.style.display = 'none';
+            }
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const name = document.getElementById('authName').value;
+
+            if (isAuthMode === 'signup') {
+                if (!name) {
+                    showToast('Please enter your name', 'error');
+                    return;
+                }
+                // Simulate signup
+                currentUser = { name, email };
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                showToast(`Welcome ${name}! 🎉`, 'success');
+            } else {
+                // Simulate login
+                const savedUser = localStorage.getItem('user');
+                if (savedUser) {
+                    currentUser = JSON.parse(savedUser);
+                    showToast(`Welcome back ${currentUser.name}! 👋`, 'success');
+                } else {
+                    // Create temp user for demo
+                    currentUser = { name: 'Guest', email };
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    showToast('Welcome Guest! 👋', 'success');
+                }
+            }
+
+            updateAuthUI();
+            closeAuth();
+            document.getElementById('authForm').reset();
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                localStorage.removeItem('user');
+                updateAuthUI();
+                showToast('Logged out successfully', 'success');
+            }
+        }
+
+        function updateAuthUI() {
+            const authBtn = document.getElementById('authBtn');
+            const avatar = document.getElementById('userAvatar');
+            const avatarText = document.getElementById('avatarText');
+
+            if (currentUser) {
+                authBtn.style.display = 'none';
+                avatar.style.display = 'flex';
+                avatarText.textContent = currentUser.name.charAt(0).toUpperCase();
+            } else {
+                authBtn.style.display = 'block';
+                avatar.style.display = 'none';
+            }
+        }
+
+        // ========================================
+        // RENDER CARS
+        // ========================================
+        function renderCars(carsToRender = filteredCars) {
+            const grid = document.getElementById('carsGrid');
+            
+            if (carsToRender.length === 0) {
+                grid.innerHTML = `<p style="text-align:center;color:#666;padding:40px 0;">No cars found matching your criteria</p>`;
+                return;
+            }
+
+            grid.innerHTML = carsToRender.map(car => `
+                <div class="car-card">
+                    <img src="${car.image}" alt="${car.name}" />
+                    <span class="badge">${car.badge}</span>
+                    <div class="car-info">
+                        <h3>${car.name}</h3>
+                        <div class="price">$${car.price.toLocaleString()}</div>
+                        <div class="specs">
+                            <span><i class="fas fa-calendar"></i> ${car.year}</span>
+                            <span><i class="fas fa-tachometer-alt"></i> ${car.mileage}</span>
+                            <span><i class="fas fa-cog"></i> ${car.engine}</span>
+                        </div>
+                        <div class="car-actions">
+                            <button class="btn-primary" onclick="addToCart(${car.id})">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                            <button class="wishlist-btn ${wishlist.includes(car.id) ? 'active' : ''}" 
+                                    onclick="toggleWishlist(${car.id})">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ========================================
+        // FILTER & SEARCH
+        // ========================================
+        function filterCars() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filterType = document.getElementById('filterSelect').value;
+            const sortType = document.getElementById('sortSelect').value;
+
+            let result = [...cars];
+
+            // Search
+            if (searchTerm) {
+                result = result.filter(car => 
+                    car.name.toLowerCase().includes(searchTerm) ||
+                    car.engine.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Filter by badge
+            if (filterType !== 'all') {
+                result = result.filter(car => 
+                    car.badge.toLowerCase() === filterType.toLowerCase()
+                );
+            }
+
+            // Sort
+            if (sortType === 'price-low') {
+                result.sort((a, b) => a.price - b.price);
+            } else if (sortType === 'price-high') {
+                result.sort((a, b) => b.price - a.price);
+            } else if (sortType === 'name') {
+                result.sort((a, b) => a.name.localeCompare(b.name));
+            }
+
+            filteredCars = result;
+            renderCars(result);
+        }
+
+        // ========================================
+        // WISHLIST
+        // ========================================
+        function toggleWishlist(carId) {
+            const index = wishlist.indexOf(carId);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                showToast('Removed from wishlist 💔', 'error');
+            } else {
+                wishlist.push(carId);
+                const car = cars.find(c => c.id === carId);
+                showToast(`Added ${car.name} to wishlist ❤️`, 'success');
+            }
+            renderCars(filteredCars);
+        }
+
+        // ========================================
+        // CART
+        // ========================================
+        function addToCart(carId) {
+            if (!currentUser) {
+                showToast('Please login first! 🔐', 'error');
+                openAuth();
+                return;
+            }
+
+            const car = cars.find(c => c.id === carId);
+            const existing = cart.find(item => item.id === carId);
+            
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...car, quantity: 1 });
+            }
+            
+            updateCartUI();
+            showToast(`✅ ${car.name} added to cart!`, 'success');
+        }
+
+        function removeFromCart(carId) {
+            cart = cart.filter(item => item.id !== carId);
+            updateCartUI();
+            showToast('🗑️ Item removed from cart', 'error');
+        }
+
+        function updateQuantity(carId, delta) {
+            const item = cart.find(i => i.id === carId);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    removeFromCart(carId);
+                    return;
+                }
+                updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            document.getElementById('cartCount').textContent = cartCount;
+            document.getElementById('cartTotal').textContent = `$${cartTotal.toLocaleString()}`;
+            
+            const cartItemsContainer = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p class="empty-cart-msg">🛒 Your cart is empty</p>`;
+                return;
+            }
+            
+            cartItemsContainer.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" />
+                    <div class="item-info">
+                        <h4>${item.name}</h4>
+                        <div class="item-price">$${(item.price * item.quantity).toLocaleString()}</div>
+                        <div class="qty-control">
+                            <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                    <button class="item-remove" onclick="removeFromCart(${item.id})">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            const overlay = document.getElementById('cartOverlay');
+            sidebar.classList.toggle('open');
+            overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+        }
+
+        // ========================================
+        // CHECKOUT & PAYMENT (Stripe Simulation)
+        // ========================================
+        function processCheckout() {
+            if (cart.length === 0) {
+                showToast('⚠️ Your cart is empty!', 'error');
+                return;
+            }
+
+            if (!currentUser) {
+                showToast('Please login to checkout! 🔐', 'error');
+                openAuth();
+                return;
+            }
+
+            // Show Stripe-like payment modal
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Simulate Stripe payment
+            showToast('💳 Redirecting to payment...', 'success');
+            
+            setTimeout(() => {
+                // Simulate successful payment
+                const order = {
+                    id: 'ORD-' + Date.now(),
+                    items: [...cart],
+                    total: total,
+                    date: new Date().toISOString(),
+                    status: 'Processing'
+                };
+                
+                orders.unshift(order);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
+                // Clear cart
+                cart = [];
+                updateCartUI();
+                renderOrders();
+                
+                showToast(`🎉 Order placed successfully! Total: $${total.toLocaleString()}`, 'success');
+                
+                // Close cart
+                if (document.getElementById('cartSidebar').classList.contains('open')) {
+                    toggleCart();
+                }
+            }, 1500);
+        }
+
+        // ========================================
+        // ORDERS
+        // ========================================
+        function renderOrders() {
+            const grid = document.getElementById('ordersGrid');
+            
+            if (orders.length === 0) {
+                grid.innerHTML = `<p style="text-align:center;color:#666;padding:40px 0;">No orders yet. Start shopping!</p>`;
+                return;
+            }
+
+            grid.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">${order.id}</span>
+                        <span class="order-status ${order.status.toLowerCase()}">${order.status}</span>
+                        <span style="color:#888;font-size:14px;">
+                            ${new Date(order.date).toLocaleDateString()} ${new Date(order.date).toLocaleTimeString()}
+                        </span>
+                    </div>
+                    <div class="order-items">
+                        ${order.items.map(item => `${item.name} (${item.quantity})`).join(', ')}
+                    </div>
+                    <div class="order-total">Total: $${order.total.toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        // ========================================
+        // TOAST
+        // ========================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            toast.classList.add('show');
+            
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // ========================================
+        // MOBILE MENU
+        // ========================================
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // ========================================
+        // CONTACT FORM
+        // ========================================
+        document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('📨 Message sent! We\'ll get back to you soon.', 'success');
+            this.reset();
+        });
+
+        // ========================================
+        // KEYBOARD SHORTCUTS
+        // ========================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('cartSidebar').classList.contains('open')) {
+                    toggleCart();
+                }
+                if (document.getElementById('authModal').classList.contains('active')) {
+                    closeAuth();
+                }
+            }
+            if (e.ctrlKey && e.key === 'c') {
+                toggleCart();
+            }
+        });
+
+        // ========================================
+        // INIT
+        // ========================================
+        function init() {
+            // Load saved data
+            const savedUser = localStorage.getItem('user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+            }
+
+            const savedOrders = localStorage.getItem('orders');
+            if (savedOrders) {
+                orders = JSON.parse(savedOrders);
+            }
+
+            updateAuthUI();
+            renderOrders();
+            renderCars();
+            updateCartUI();
+
+            // Welcome message
+            if (currentUser) {
+                setTimeout(() => {
+                    showToast(`Welcome back ${currentUser.name}! 🚗`, 'success');
+                }, 500);
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotlight Player</title>
+  <link rel="stylesheet" href="music.css" />
+</head>
+<body>
+  <header class="music-hero">
+    <div class="music-hero-content container">
+      <div>
+        <span class="eyebrow">Your music, your choice</span>
+        <h1>Spotlight Player</h1>
+        <p>Pick a track and choose whether you want audio only or video playback.</p>
+      </div>
+      <a href="index.html" class="btn btn-secondary">Back to Home</a>
+    </div>
+  </header>
+
+  <main class="player-page container">
+    <section class="player-panel">
+      <div class="player-card">
+        <div class="player-info" id="player-info">
+          <div class="track-meta">
+            <span class="track-label">Select a track to start</span>
+            <h2 class="track-title">Spotlight Player</h2>
+            <p class="track-subtitle">Choose audio or video for each song.</p>
+          </div>
+        </div>
+
+        <div class="playback-actions">
+          <button class="btn btn-primary" id="play-audio" disabled>Play audio</button>
+          <button class="btn btn-primary" id="play-video" disabled>Play video</button>
+          <button class="btn btn-outline" id="stop-btn" disabled>Stop</button>
+        </div>
+
+        <div class="media-preview" id="media-preview">
+          <audio id="audio-player" controls hidden></audio>
+          <video id="video-player" controls hidden></video>
+        </div>
+      </div>
+    </section>
+
+    <section class="playlist-section">
+      <h3>Track Library</h3>
+      <div class="playlist" id="playlist"></div>
+    </section>
+  </main>
+
+  <script src="music.js"></script>
+</body>
+</html>
