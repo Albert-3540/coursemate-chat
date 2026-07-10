@@ -41,7 +41,7 @@ function writeJson(filePath, data) {
 }
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "assa.html"));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.post("/api/auth/register", (req, res) => {
@@ -109,7 +109,7 @@ app.post("/api/auth/login", (req, res) => {
     const user = users.find(
       (u) =>
         (u.email.toLowerCase() === emailOrUsername.toLowerCase() ||
-        u.username.toLowerCase() === emailOrUsername.toLowerCase()) &&
+          u.username.toLowerCase() === emailOrUsername.toLowerCase()) &&
         u.password === password
     );
 
