@@ -1,64 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chat Dashboard - CourseMate Chat</title>
-  <link rel="stylesheet" href="chat.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CourseMate Chat</title>
+    <link rel="stylesheet" href="chat.css" />
 </head>
 <body>
-  <div class="chat-layout">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="brand">CourseMate Chat</div>
+    <div class="app-container">
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Header -->
+            <div class="sidebar-header">
+                <div class="user-avatar">
+                    <img id="profilePic" src="https://i.pravatar.cc/100?img=12" alt="Profile" />
+                    <span class="status-dot online"></span>
+                </div>
+                <div class="user-meta">
+                    <h3 id="profileName">Student Name</h3>
+                    <span class="status-text">Online</span>
+                </div>
+                <div class="sidebar-actions">
+                    <button class="icon-btn" title="New Chat">✏️</button>
+                    <button class="icon-btn" title="Settings">⚙️</button>
+                </div>
+            </div>
 
-      <div class="user-profile">
-        <img id="profilePic" src="https://i.pravatar.cc/100?img=12" alt="Profile" />
-        <div>
-          <h3 id="profileName">Student Name</h3>
-          <p id="profileUsername">@username</p>
+            <!-- Search -->
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search or start new chat" />
+            </div>
+
+            <!-- Chat List -->
+            <div class="chat-list" id="chatList">
+                <div class="chat-item active">
+                    <div class="chat-avatar">
+                        <span>👥</span>
+                        <span class="status-dot online"></span>
+                    </div>
+                    <div class="chat-info">
+                        <h4>General Class Room</h4>
+                        <p>Last message preview...</p>
+                    </div>
+                    <div class="chat-meta">
+                        <span class="time">12:30</span>
+                        <span class="unread">3</span>
+                    </div>
+                </div>
+                <div class="chat-item">
+                    <div class="chat-avatar">
+                        <span>📚</span>
+                        <span class="status-dot away"></span>
+                    </div>
+                    <div class="chat-info">
+                        <h4>Study Group 2026</h4>
+                        <p>Mary: Who's coming to the library?</p>
+                    </div>
+                    <div class="chat-meta">
+                        <span class="time">11:45</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="sidebar-footer">
+                <button class="footer-btn" id="logoutBtn">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- ===== MAIN CHAT AREA ===== -->
+        <main class="chat-main">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <div class="chat-avatar-sm">
+                        <span>👥</span>
+                    </div>
+                    <div>
+                        <h2 id="chatTitle">General Class Room</h2>
+                        <p id="chatStatus">Online • 24 members</p>
+                    </div>
+                </div>
+                <div class="chat-header-right">
+                    <button class="icon-btn" title="Voice Call">📞</button>
+                    <button class="icon-btn" title="Video Call">📹</button>
+                    <button class="icon-btn" title="More options">⋮</button>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be inserted here -->
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-container">
+                <div class="input-toolbar">
+                    <button class="toolbar-btn" id="emojiBtn" title="Emoji">😊</button>
+                    <button class="toolbar-btn" id="attachBtn" title="Attach">📎</button>
+                    <input type="file" id="fileInput" accept="image/*,video/*,.pdf,.doc,.docx" hidden multiple />
+                </div>
+
+                <form id="chatForm" class="input-form">
+                    <input
+                        type="text"
+                        id="messageInput"
+                        placeholder="Type a message..."
+                        autocomplete="off"
+                    />
+                    <div class="input-actions">
+                        <button type="button" class="mic-btn" id="micBtn" title="Voice message">🎤</button>
+                        <button type="submit" class="send-btn" id="sendBtn">📤</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- ===== EMOJI PICKER ===== -->
+    <div class="emoji-picker" id="emojiPicker">
+        <div class="emoji-grid">
+            <span>😊</span><span>😂</span><span>🤣</span><span>❤️</span>
+            <span>🔥</span><span>👍</span><span>👏</span><span>🙌</span>
+            <span>🎉</span><span>✨</span><span>💪</span><span>🤝</span>
+            <span>😍</span><span>🥰</span><span>😘</span><span>😁</span>
+            <span>🤔</span><span>😅</span><span>😎</span><span>🤩</span>
+            <span>😇</span><span>🥳</span><span>🤗</span><span>😴</span>
         </div>
-      </div>
+    </div>
 
-      <div class="menu">
-        <button class="menu-btn active">General Chat</button>
-      </div>
+    <!-- ===== CONTEXT MENU ===== -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-item" data-action="reply">↩️ Reply</div>
+        <div class="context-item" data-action="forward">➡️ Forward</div>
+        <div class="context-item" data-action="copy">📋 Copy</div>
+        <div class="context-item" data-action="delete">🗑️ Delete</div>
+    </div>
 
-      <div class="online-section">
-        <h4>Registered Users</h4>
-        <ul id="onlineUsersList"></ul>
-      </div>
-
-      <button id="logoutBtn" class="logout-btn">Logout</button>
-    </aside>
-
-    <!-- Main Chat -->
-    <main class="chat-main">
-      <div class="chat-header">
-        <div>
-          <h2>General Class Room</h2>
-          <p>Chat with everyone in your course</p>
-        </div>
-      </div>
-
-      <div id="chatMessages" class="chat-messages"></div>
-
-      <form id="chatForm" class="chat-input-area" enctype="multipart/form-data">
-        <input
-          type="text"
-          id="messageInput"
-          placeholder="Type your message..."
-          autocomplete="off"
-        />
-
-        <label for="imageInput" class="file-label">📷</label>
-        <input type="file" id="imageInput" accept="image/*" hidden />
-
-        <button type="submit">Send</button>
-      </form>
-    </main>
-  </div>
-
-  <script src="chat.js"></script>
+    <script src="chat.js"></script>
 </body>
 </html>
