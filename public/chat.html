@@ -43,13 +43,17 @@
 
       <div id="chatMessages" class="chat-messages"></div>
 
-      <form id="chatForm" class="chat-input-area">
+      <form id="chatForm" class="chat-input-area" enctype="multipart/form-data">
         <input
           type="text"
           id="messageInput"
           placeholder="Type your message..."
           autocomplete="off"
         />
+
+        <label for="imageInput" class="file-label">📷</label>
+        <input type="file" id="imageInput" accept="image/*" hidden />
+
         <button type="submit">Send</button>
       </form>
     </main>

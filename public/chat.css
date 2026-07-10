@@ -197,3 +197,26 @@
       display: none;
     }
   }
+  .file-label {
+  background: #2563eb;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-image {
+  margin-top: 8px;
+  max-width: 220px;
+  border-radius: 12px;
+  display: block;
+}
+
+.message-text {
+  margin-top: 6px;
+  line-height: 1.4;
+}

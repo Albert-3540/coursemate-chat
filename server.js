@@ -2,38 +2,42 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve frontend files
 app.use(express.static(path.join(__dirname, "public")));
 
+// Serve uploaded files
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// File paths
 const dataFolder = path.join(__dirname, "data");
 const usersFilePath = path.join(dataFolder, "users.json");
 const messagesFilePath = path.join(dataFolder, "messages.json");
+const uploadsFolder = path.join(__dirname, "uploads");
 
+// Ensure folders/files exist
 function ensureDataFiles() {
-  if (!fs.existsSync(dataFolder)) {
-    fs.mkdirSync(dataFolder, { recursive: true });
-  }
+  if (!fs.existsSync(dataFolder)) fs.mkdirSync(dataFolder, { recursive: true });
+  if (!fs.existsSync(uploadsFolder)) fs.mkdirSync(uploadsFolder, { recursive: true });
 
-  if (!fs.existsSync(usersFilePath)) {
-    fs.writeFileSync(usersFilePath, "[]", "utf8");
-  }
-
-  if (!fs.existsSync(messagesFilePath)) {
-    fs.writeFileSync(messagesFilePath, "[]", "utf8");
-  }
+  if (!fs.existsSync(usersFilePath)) fs.writeFileSync(usersFilePath, "[]", "utf8");
+  if (!fs.existsSync(messagesFilePath)) fs.writeFileSync(messagesFilePath, "[]", "utf8");
 }
 
 function readJson(filePath) {
   ensureDataFiles();
   try {
-    const raw = fs.readFileSync(filePath, "utf8");
-    if (!raw || !raw.trim()) return [];
-    return JSON.parse(raw);
+    const data = fs.readFileSync(filePath, "utf8").trim();
+    return data ? JSON.parse(data) : [];
   } catch (error) {
     console.error(`Error reading ${filePath}:`, error);
     return [];
@@ -44,21 +48,33 @@ function writeJson(filePath, data) {
   ensureDataFiles();
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf8");
-    return true;
   } catch (error) {
     console.error(`Error writing ${filePath}:`, error);
-    return false;
   }
 }
 
-// Home
+// Multer setup for image upload
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    ensureDataFiles();
+    cb(null, uploadsFolder);
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + "-" + file.originalname.replace(/\s+/g, "_");
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ storage });
+
+// Homepage
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // Health check
 app.get("/api/health", (req, res) => {
-  res.status(200).json({
+  res.json({
     ok: true,
     message: "CourseMate backend is running",
     usersFile: usersFilePath,
@@ -69,9 +85,7 @@ app.get("/api/health", (req, res) => {
 // Register
 app.post("/api/auth/register", (req, res) => {
   try {
-    console.log("REGISTER BODY:", req.body);
-
-    const { fullName, username, email, password } = req.body || {};
+    const { fullName, username, email, password } = req.body;
 
     if (!fullName || !username || !email || !password) {
       return res.status(400).json({ message: "All fields are required." });
@@ -102,11 +116,7 @@ app.post("/api/auth/register", (req, res) => {
     };
 
     users.push(newUser);
-
-    const saved = writeJson(usersFilePath, users);
-    if (!saved) {
-      return res.status(500).json({ message: "Could not save user data." });
-    }
+    writeJson(usersFilePath, users);
 
     return res.status(201).json({
       message: "Account created successfully.",
@@ -119,19 +129,14 @@ app.post("/api/auth/register", (req, res) => {
     });
   } catch (error) {
     console.error("REGISTER ERROR:", error);
-    return res.status(500).json({
-      message: "Server error during registration.",
-      error: error.message
-    });
+    return res.status(500).json({ message: "Server error during registration." });
   }
 });
 
 // Login
 app.post("/api/auth/login", (req, res) => {
   try {
-    console.log("LOGIN BODY:", req.body);
-
-    const { emailOrUsername, password } = req.body || {};
+    const { emailOrUsername, password } = req.body;
 
     if (!emailOrUsername || !password) {
       return res.status(400).json({
@@ -165,14 +170,11 @@ app.post("/api/auth/login", (req, res) => {
     });
   } catch (error) {
     console.error("LOGIN ERROR:", error);
-    return res.status(500).json({
-      message: "Server error during login.",
-      error: error.message
-    });
+    return res.status(500).json({ message: "Server error during login." });
   }
 });
 
-// Users
+// Get users
 app.get("/api/users", (req, res) => {
   try {
     const users = readJson(usersFilePath);
@@ -189,7 +191,7 @@ app.get("/api/users", (req, res) => {
   }
 });
 
-// Messages
+// Get messages
 app.get("/api/messages", (req, res) => {
   try {
     const messages = readJson(messagesFilePath);
@@ -200,12 +202,17 @@ app.get("/api/messages", (req, res) => {
   }
 });
 
-app.post("/api/messages", (req, res) => {
+// Send text/image message
+app.post("/api/messages", upload.single("image"), (req, res) => {
   try {
-    const { fullName, username, text } = req.body || {};
+    const { fullName, username, text } = req.body;
 
-    if (!fullName || !username || !text) {
-      return res.status(400).json({ message: "Missing message details." });
+    if (!fullName || !username) {
+      return res.status(400).json({ message: "Missing sender details." });
+    }
+
+    if (!text && !req.file) {
+      return res.status(400).json({ message: "Message text or image is required." });
     }
 
     const messages = readJson(messagesFilePath);
@@ -214,16 +221,13 @@ app.post("/api/messages", (req, res) => {
       id: Date.now().toString(),
       fullName,
       username,
-      text,
+      text: text || "",
+      image: req.file ? `/uploads/${req.file.filename}` : "",
       createdAt: new Date().toISOString()
     };
 
     messages.push(newMessage);
-
-    const saved = writeJson(messagesFilePath, messages);
-    if (!saved) {
-      return res.status(500).json({ message: "Could not save message." });
-    }
+    writeJson(messagesFilePath, messages);
 
     return res.status(201).json({
       message: "Message sent successfully.",
@@ -231,10 +235,7 @@ app.post("/api/messages", (req, res) => {
     });
   } catch (error) {
     console.error("SEND MESSAGE ERROR:", error);
-    return res.status(500).json({
-      message: "Failed to send message.",
-      error: error.message
-    });
+    return res.status(500).json({ message: "Failed to send message." });
   }
 });
 

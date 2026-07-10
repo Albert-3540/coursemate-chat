@@ -1,6 +1,7 @@
 const chatMessages = document.getElementById("chatMessages");
 const chatForm = document.getElementById("chatForm");
 const messageInput = document.getElementById("messageInput");
+const imageInput = document.getElementById("imageInput");
 const onlineUsersList = document.getElementById("onlineUsersList");
 const profileName = document.getElementById("profileName");
 const profileUsername = document.getElementById("profileUsername");
@@ -44,13 +45,24 @@ function createMessageElement(message) {
   meta.className = "message-meta";
   meta.textContent = `${message.fullName} (@${message.username})`;
 
-  const text = document.createElement("div");
-  text.textContent = message.text;
-
   content.appendChild(meta);
-  content.appendChild(text);
-  wrapper.appendChild(content);
 
+  if (message.text) {
+    const text = document.createElement("div");
+    text.className = "message-text";
+    text.textContent = message.text;
+    content.appendChild(text);
+  }
+
+  if (message.image) {
+    const img = document.createElement("img");
+    img.src = message.image;
+    img.alt = "Chat image";
+    img.className = "chat-image";
+    content.appendChild(img);
+  }
+
+  wrapper.appendChild(content);
   return wrapper;
 }
 
@@ -76,19 +88,25 @@ if (chatForm) {
     e.preventDefault();
 
     const text = messageInput.value.trim();
-    if (!text) return;
+    const imageFile = imageInput.files[0];
+
+    if (!text && !imageFile) {
+      return;
+    }
 
     try {
+      const formData = new FormData();
+      formData.append("fullName", currentUser.fullName);
+      formData.append("username", currentUser.username);
+      formData.append("text", text);
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
       const res = await fetch("/api/messages", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          fullName: currentUser.fullName,
-          username: currentUser.username,
-          text
-        })
+        body: formData
       });
 
       const data = await res.json();
@@ -99,9 +117,11 @@ if (chatForm) {
       }
 
       messageInput.value = "";
+      imageInput.value = "";
       loadMessages();
     } catch (error) {
       console.error("SEND MESSAGE ERROR:", error);
+      alert("Could not send message.");
     }
   });
 }
